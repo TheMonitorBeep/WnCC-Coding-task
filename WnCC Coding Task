@@ -1,0 +1,213 @@
+#include<iostream>
+#include<fstream>
+#include<string>
+#include<cstdlib>
+#include<cmath>
+
+using namespace std;
+int main()
+{
+	std::ifstream f2;
+	f2.open("timestat.txt");
+	string a;
+	float realsum = 0,usersum=0,syssum=0;
+	float realsum2 = 0, usersum2 = 0, syssum2 = 0;
+	while(f2)
+	{
+		getline(f2,a);
+		if(a[0]=='r')
+		{ float realt =0;
+			for(int i=0;a[i]!='\0';i++)
+			{
+				if(a[i]=='m')
+				{
+					float x = a[i-1] - '0';
+					realt = x*60;
+					string s;
+					for(int j=0;j<5;j++)
+					{
+						
+						s[j] = a[i+1+j];
+					}
+					float y = stof(s);
+					realt = realt + y;
+				}
+
+
+			}
+
+			realsum = realsum + realt;
+			realsum2 = realsum2 + realt*realt;
+
+		}
+
+		else if(a[0]=='u')
+		{ float usert =0;
+			for(int i=0;a[i]!='\0';i++)
+			{
+				if(a[i]=='m')
+				{
+					float x = a[i-1] - '0';
+					usert = x*60;
+					string s;
+					for(int j=0;j<5;j++)
+					{
+						
+						s[j] = a[i+1+j];
+					}
+					float y = stof(s);
+					usert = usert + y;
+				}
+
+
+			}
+			usersum = usersum + usert;
+			usersum2 = usersum2 + usert*usert;
+
+		}
+
+		else if(a[0]=='s')
+		{ float syst =0;
+			for(int i=0;a[i]!='\0';i++)
+			{
+				if(a[i]=='m')
+				{
+					float x = a[i-1] - '0';
+					syst = x*60;
+					string s;
+					for(int j=0;j<5;j++)
+					{
+						
+						s[j] = a[i+1+j];
+					}
+					float y = stof(s);
+					syst = syst + y;
+				}
+
+
+			}
+			syssum = syssum + syst;
+			syssum2 = syssum2 + syst*syst;
+
+		}
+
+
+		
+	
+     }
+
+     float realavg = realsum/100;
+     float useravg = usersum/100;
+     float sysavg = syssum/100;
+     float realstd = sqrt((realsum2/100)-(realavg*realavg));
+     float userstd = sqrt((usersum2/100)-(useravg*useravg));
+     float sysstd = sqrt((syssum2/100)-(sysavg*sysavg));
+
+
+     f2.close();
+
+     f2.open("timestat.txt");
+     string b;int r=0,u=0,s=0;
+     while(f2)
+	{
+		getline(f2,b);
+		if(b[0]=='r')
+		{ float realt =0;
+			for(int i=0;b[i]!='\0';i++)
+			{
+				if(b[i]=='m')
+				{
+					float x = b[i-1] - '0';
+					realt = x*60;
+					string s;
+					for(int j=0;j<5;j++)
+					{
+						
+						s[j] = b[i+1+j];
+					}
+					float y = stof(s);
+					realt = realt + y;
+				}
+
+
+			}
+			if(realt>(realavg-realstd)&&realt<(realavg+realstd))
+			{
+				r++;
+			}
+			
+			
+
+		}
+
+		else if(b[0]=='u')
+		{ float usert =0;
+			for(int i=0;b[i]!='\0';i++)
+			{
+				if(b[i]=='m')
+				{
+					float x = b[i-1] - '0';
+					usert = x*60;
+					string s;
+					for(int j=0;j<5;j++)
+					{
+						
+						s[j] = b[i+1+j];
+					}
+					float y = stof(s);
+					usert = usert + y;
+				}
+
+
+			}
+			if(usert>(useravg-userstd)&&usert<(useravg+userstd))
+			{
+				u++;
+			}
+			
+
+
+		}
+
+		else if(b[0]=='s')
+		{ float syst =0;
+			for(int i=0;b[i]!='\0';i++)
+			{
+				if(b[i]=='m')
+				{
+					float x = b[i-1] - '0';
+					syst = x*60;
+					string s;
+					for(int j=0;j<5;j++)
+					{
+						
+						s[j] = b[i+1+j];
+					}
+					float y = stof(s);
+					syst = syst + y;
+				}
+
+
+			}
+			if(syst>(sysavg-sysstd)&&syst<(sysavg+sysstd))
+			{
+				s++;
+			}
+
+		}
+    }
+
+
+    cout<<"Number Of runs:"<<" "<<100<<endl;
+    cout<<"Average Time Statistics"<<endl;
+    cout<<" real "<<realavg<<" user "<<useravg<<" sys "<<sysavg<<endl;
+    cout<<"Standard deviation of Time Statistics"<<endl;
+    cout<<" real "<<realstd<<" user "<<userstd<<" sys "<<sysstd<<endl;
+    cout<<"Number of runs within (average-standard deviation) to (average + standard deviation)"<<endl;
+    cout<<" real "<<r<<" user "<<u<<" sys "<<s<<endl;
+
+     
+
+	f2.close();
+	return 0;
+}
